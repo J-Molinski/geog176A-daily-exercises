@@ -1,6 +1,6 @@
 ---
 title: "Daily Exercise 05"
-author: "Mike Johnson"
+author: "Jordan Molinski"
 output: html_document
 ---
 
@@ -49,10 +49,16 @@ to print the top 5 columns of the raw covid `object`
 
 Use `dplyr` verbs to  create a data.frame of the **5** counties with the most current cases. Remember, the cases and deaths are cumulative, so you only need to deal with the data for the most current (`max`) date.
 
+
+
 (**Hint:** `filter`, `arrange`)
 
 ```{r}
-
+covid %>%
+  select(date, county, cases) %>%
+  filter(date == "2020-08-10") %>%
+  arrange(-cases) %>%
+  head(5)
 ```
 
 ## Question 2: 
@@ -62,7 +68,12 @@ Use `dplyr` verbs to create a data.frame of the **5** states with the _most_ cas
 (**Hint:** `filter`, `group_by`, `summarize`, `arrange`)
 
 ```{r}
-
+covid %>%
+  filter(date == "2020-08-10") %>%
+  group_by(state) %>%
+  summarize(current_cases = sum(cases)) %>%
+  arrange(-current_cases) %>%
+  head(5)
 ```
 
 ## Question 3: 
@@ -72,7 +83,12 @@ Use the `dplyr` verbs to report the **5** counties with the _worst_ current deat
 (**Hint:** `filter`, `mutate`, `arrange`)
 
 ```{r}
-
+covid %>%
+  select(date, county, cases, deaths) %>%
+  filter(date == "2020-08-10", county != "Unknown") %>%
+  mutate(ratio= 100* (deaths/cases)) %>%
+  arrange(-ratio) %>%
+  head(5)
 ```
 
 
@@ -83,7 +99,14 @@ Use the `dplyr` verbs to report the **5** states with the _worst_ current death/
 (**Hint:** `filter`, `group_by`, `summarize`, `mutate`, `arrange`)
 
 ```{r}
-
+covid %>%
+  select(date, state, cases, deaths) %>%
+  filter(date == "2020-08-10") %>%
+  group_by(state) %>%
+  summarize(ccases = sum(cases), cdeaths = sum(deaths)) %>%
+  mutate(ratio = 100* (cdeaths/ccases)) %>%
+  arrange(-ratio) %>%
+  head(5)
 ```
 
 
